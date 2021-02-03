@@ -1,7 +1,7 @@
 ---
 title: "Homework 1"
-author: ""
-date: ""
+author: "Andrew Blosse"
+date: "2/2/21"
 output: html_document
 ---
 
@@ -12,12 +12,43 @@ knitr::opts_chunk$set(echo = TRUE, comment = NA)
 ## Task 1
 
 ```{r mh_distance_function}
-mh_distance <- function() {
+mh_distance <- function(x, y) {
+  if (typeof(x) != typeof(y)) {
+    warning("Vectors are not of the same type")
+    return(-1)}
+  else if (is.na(x) | is.na(y)) {
+    warning("X or Y is NA")
+    return(-1)}
+   else if (is.nan(x) | is.nan(y)) {
+    warning("X or Y is NaN")
+    return(-1)}
+   else if (is.infinite(x) | is.infinite(y)) {
+    warning("X or Y is Inf/-Inf")
+    return(-1)}
+  else if (all(typeof(x) != c("logical", "character", "integer", "double"))) {
+    warning("x is not logical/character/numeric")
+    return(-1)}
+  else if (all(typeof(y) != c("logical", "character", "integer", "double"))) {
+    warning("y is not logical/character/numeric")
+    return(-1)}
+  else if (any(typeof(x)== c("character", "integer", "double")) | any(typeof(y)== c("character", "integer", "double"))) {
+    if (nchar((as.character(x)))!= nchar((as.character(y)))) {
+    warning("X and Y are not the same length")
+    return(-1)}}
   
-  # body of your function goes here...
-  
+  else return(2)
 }
+mh_distance(T,F)
 ```
+else if (nchar((as.character(x)))!= nchar((as.character(y)))) {
+    warning("X and Y are not the same length")
+    return(-1)}
+else if (any(x == c(NA, NaN, Inf, -Inf))) {
+      warning("x contains NA/NaN/Inf/-Inf values")
+      return(-1)}
+  #else if ((any(y==c(NA, NaN, Inf, -Inf)))) {
+    #warning("y contains NA/NaN/Inf/-Inf")
+    #return(-1)}
 
 
 ## Task 2
@@ -30,7 +61,7 @@ text in your final submission.
 
 **Initial test cases** (return a non-negative modified Hamming distance)
 
-```{r eval=FALSE}
+```{r}
 mh_distance(x = "abc", y = "abc")
 mh_distance(x = T, y = FALSE)
 mh_distance(x = "523890", y = "752839")
