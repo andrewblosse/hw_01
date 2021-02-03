@@ -385,6 +385,10 @@ summary {
   if (typeof(x) != typeof(y)) {
     warning(&quot;Vectors are not of the same type&quot;)
     return(-1)}
+  else if (nchar(x) != nchar(y) &amp; typeof(x) !=&quot;logical&quot; &amp; typeof(y)!=&quot;logical&quot;) {
+    warning(&quot;x and y are different lengths&quot;)
+    return(-1)
+  }
   else if (is.na(x) | is.na(y)) {
     warning(&quot;X or Y is NA&quot;)
     return(-1)}
@@ -400,26 +404,27 @@ summary {
   else if (all(typeof(y) != c(&quot;logical&quot;, &quot;character&quot;, &quot;integer&quot;, &quot;double&quot;))) {
     warning(&quot;y is not logical/character/numeric&quot;)
     return(-1)}
-  else if (any(typeof(x)== c(&quot;character&quot;, &quot;integer&quot;, &quot;double&quot;)) | any(typeof(y)== c(&quot;character&quot;, &quot;integer&quot;, &quot;double&quot;))) {
-    if (nchar((as.character(x)))!= nchar((as.character(y)))) {
-    warning(&quot;X and Y are not the same length&quot;)
-    return(-1)}}
-  
-  else return(2)
+  else if (typeof(x)==&quot;double&quot; | typeof(y) == &quot;double&quot;){
+    if (x %% 1 !=0 | y%%1 !=0) {
+      warning(&quot;Decimals in x or y&quot;)
+      return(-1)}}
+  else return(10)
 }
 mh_distance(T,F)</code></pre>
-<pre><code>[1] 2</code></pre>
+<pre><code>[1] 10</code></pre>
 <p>else if (nchar((as.character(x)))!= nchar((as.character(y)))) { warning(“X and Y are not the same length”) return(-1)} else if (any(x == c(NA, NaN, Inf, -Inf))) { warning(“x contains NA/NaN/Inf/-Inf values”) return(-1)} #else if ((any(y==c(NA, NaN, Inf, -Inf)))) { #warning(“y contains NA/NaN/Inf/-Inf”) #return(-1)}</p>
 </div>
 <div id="task-2" class="section level2">
 <h2>Task 2</h2>
 <p><i> Be sure to remove chunk option <code>eval=FALSE</code> in the below code chunks once you create <code>mh_distance()</code>. Do not include this italicized text in your final submission. </i></p>
 <p><strong>Initial test cases</strong> (return a non-negative modified Hamming distance)</p>
-<pre class="r"><code>mh_distance(x = &quot;abc&quot;, y = &quot;abc&quot;)
-mh_distance(x = T, y = FALSE)</code></pre>
-<pre><code>[1] 2</code></pre>
-<pre class="r"><code>mh_distance(x = &quot;523890&quot;, y = &quot;752839&quot;)
-mh_distance(x = 2341, y = 2350)</code></pre>
+<pre class="r"><code>mh_distance(x = &quot;abc&quot;, y = &quot;abc&quot;)</code></pre>
+<pre><code>[1] 10</code></pre>
+<pre class="r"><code>mh_distance(x = T, y = FALSE)</code></pre>
+<pre><code>[1] 10</code></pre>
+<pre class="r"><code>mh_distance(x = &quot;523890&quot;, y = &quot;752839&quot;)</code></pre>
+<pre><code>[1] 10</code></pre>
+<pre class="r"><code>mh_distance(x = 2341, y = 2350)</code></pre>
 <p>Added test cases that return a non-negative modified Hamming distance result.</p>
 <pre class="r"><code># additional test cases go here</code></pre>
 <p><strong>Initial test cases</strong> (return values of <code>-1</code>)</p>
