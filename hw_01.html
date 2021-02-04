@@ -381,22 +381,46 @@ summary {
 
 <div id="task-1" class="section level2">
 <h2>Task 1</h2>
+<pre class="r"><code>mh &lt;- function(x,y) {
+  if (typeof(x) == &quot;logical&quot;) {
+    if (x != y) {
+      return (1)}
+    else return(0)}
+  else if (typeof(x)==&quot;character&quot;) {
+    xlist &lt;- unlist(strsplit(x, split = &quot;&quot;))
+    ylist &lt;- unlist(strsplit(y, split = &quot;&quot;))
+    dis &lt;- (xlist==ylist)
+    return(length(dis)-sum(dis))}
+  else if (any(typeof(x) == c(&quot;double&quot;,&quot;integer&quot;))) {
+    xdigits &lt;- unlist(strsplit(as.character(x), split = &quot;&quot;))
+    ydigits &lt;- unlist(strsplit(as.character(y), split = &quot;&quot;))
+    disn &lt;- (xdigits == ydigits)
+    return((length(disn)- sum(disn)))
+  }
+}
+
+x &lt;- 123
+y&lt;- 453
+mh(x,y)</code></pre>
+<pre><code>[1] 2</code></pre>
+<p>The above function calculates the modified Hamming distance in the event that x and y are acceptable inputs - it is not robust against incorrect inputs, which is why I call the above function within the below mh_distance function. Below, I’ve built in the necessary conditionals to return issue-specific errors if the user uses incorrect inputs.</p>
 <pre class="r"><code>mh_distance &lt;- function(x, y) {
   if (typeof(x) != typeof(y)) {
     warning(&quot;Vectors are not of the same type&quot;)
     return(-1)}
-  else if (nchar(x) != nchar(y) &amp; typeof(x) !=&quot;logical&quot; &amp; typeof(y)!=&quot;logical&quot;) {
+  else if (nchar(x) != nchar(y) &amp; typeof(x) !=&quot;logical&quot; &amp;
+           typeof(y)!=&quot;logical&quot;) {
     warning(&quot;x and y are different lengths&quot;)
     return(-1)
   }
   else if (is.na(x) | is.na(y)) {
-    warning(&quot;X or Y is NA&quot;)
+    warning(&quot;x or y is NA&quot;)
     return(-1)}
    else if (is.nan(x) | is.nan(y)) {
-    warning(&quot;X or Y is NaN&quot;)
+    warning(&quot;x or y is NaN&quot;)
     return(-1)}
    else if (is.infinite(x) | is.infinite(y)) {
-    warning(&quot;X or Y is Inf/-Inf&quot;)
+    warning(&quot;x or y is Inf/-Inf&quot;)
     return(-1)}
   else if (all(typeof(x) != c(&quot;logical&quot;, &quot;character&quot;, &quot;integer&quot;, &quot;double&quot;))) {
     warning(&quot;x is not logical/character/numeric&quot;)
@@ -407,33 +431,45 @@ summary {
   else if (typeof(x)==&quot;double&quot; | typeof(y) == &quot;double&quot;){
     if (x %% 1 !=0 | y%%1 !=0) {
       warning(&quot;Decimals in x or y&quot;)
-      return(-1)}}
-  else return(10)
-}
-mh_distance(T,F)</code></pre>
-<pre><code>[1] 10</code></pre>
-<p>else if (nchar((as.character(x)))!= nchar((as.character(y)))) { warning(“X and Y are not the same length”) return(-1)} else if (any(x == c(NA, NaN, Inf, -Inf))) { warning(“x contains NA/NaN/Inf/-Inf values”) return(-1)} #else if ((any(y==c(NA, NaN, Inf, -Inf)))) { #warning(“y contains NA/NaN/Inf/-Inf”) #return(-1)}</p>
+      return(-1)}
+    else return(mh(x,y))}
+  else return(mh(x,y))
+}</code></pre>
 </div>
 <div id="task-2" class="section level2">
 <h2>Task 2</h2>
-<p><i> Be sure to remove chunk option <code>eval=FALSE</code> in the below code chunks once you create <code>mh_distance()</code>. Do not include this italicized text in your final submission. </i></p>
 <p><strong>Initial test cases</strong> (return a non-negative modified Hamming distance)</p>
 <pre class="r"><code>mh_distance(x = &quot;abc&quot;, y = &quot;abc&quot;)</code></pre>
-<pre><code>[1] 10</code></pre>
+<pre><code>[1] 0</code></pre>
 <pre class="r"><code>mh_distance(x = T, y = FALSE)</code></pre>
-<pre><code>[1] 10</code></pre>
+<pre><code>[1] 1</code></pre>
 <pre class="r"><code>mh_distance(x = &quot;523890&quot;, y = &quot;752839&quot;)</code></pre>
-<pre><code>[1] 10</code></pre>
+<pre><code>[1] 5</code></pre>
 <pre class="r"><code>mh_distance(x = 2341, y = 2350)</code></pre>
+<pre><code>[1] 2</code></pre>
 <p>Added test cases that return a non-negative modified Hamming distance result.</p>
-<pre class="r"><code># additional test cases go here</code></pre>
+<pre class="r"><code># additional test cases go here
+mh_distance(1000000000000, 1000000000000) #function handles large values without issue</code></pre>
+<pre><code>[1] 0</code></pre>
+<pre class="r"><code>mh_distance(&quot;does it&quot;,&quot;recogni&quot;) #function recognizes spaces as characters</code></pre>
+<pre><code>[1] 7</code></pre>
+<pre class="r"><code>mh_distance(3L, 1L) #function is okay with integers</code></pre>
+<pre><code>[1] 1</code></pre>
 <p><strong>Initial test cases</strong> (return values of <code>-1</code>)</p>
 <pre class="r"><code>mh_distance(x = 52, y = 113)
 mh_distance(x = &quot;swimming&quot;, y = &quot;winning&quot;)
 mh_distance(x = NA, y = TRUE)
 mh_distance(x = 1.5, y = 2.5)</code></pre>
 <p>Added test cases that return a value of <code>-1</code>.</p>
-<pre class="r"><code># additional test cases go here</code></pre>
+<pre class="r"><code>mh_distance(123, Inf) #function correctly identifies Inf/Inf</code></pre>
+<pre><code>Warning in mh_distance(123, Inf): x or y is Inf/-Inf</code></pre>
+<pre><code>[1] -1</code></pre>
+<pre class="r"><code>mh_distance(pi, 20) #function recognizes transcendental numbers</code></pre>
+<pre><code>Warning in mh_distance(pi, 20): x and y are different lengths</code></pre>
+<pre><code>[1] -1</code></pre>
+<pre class="r"><code>mh_distance(as.factor(1), 1) #function rejects factors and issues correct warning</code></pre>
+<pre><code>Warning in mh_distance(as.factor(1), 1): Vectors are not of the same type</code></pre>
+<pre><code>[1] -1</code></pre>
 </div>
 <div id="task-3" class="section level2">
 <h2>Task 3</h2>
