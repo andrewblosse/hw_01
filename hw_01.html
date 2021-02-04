@@ -455,6 +455,8 @@ mh_distance(1000000000000, 1000000000000) #function handles large values without
 <pre><code>[1] 7</code></pre>
 <pre class="r"><code>mh_distance(3L, 1L) #function is okay with integers</code></pre>
 <pre><code>[1] 1</code></pre>
+<pre class="r"><code>mh_distance(&quot;AbCdEf&quot;, &quot;aBcDeF&quot;) #Correctly identifies capitals/lowers</code></pre>
+<pre><code>[1] 6</code></pre>
 <p><strong>Initial test cases</strong> (return values of <code>-1</code>)</p>
 <pre class="r"><code>mh_distance(x = 52, y = 113)
 mh_distance(x = &quot;swimming&quot;, y = &quot;winning&quot;)
@@ -469,6 +471,9 @@ mh_distance(x = 1.5, y = 2.5)</code></pre>
 <pre><code>[1] -1</code></pre>
 <pre class="r"><code>mh_distance(as.factor(1), 1) #function rejects factors and issues correct warning</code></pre>
 <pre><code>Warning in mh_distance(as.factor(1), 1): Vectors are not of the same type</code></pre>
+<pre><code>[1] -1</code></pre>
+<pre class="r"><code>mh_distance(&quot;acb&quot;, 123)    #rejects different type inputs</code></pre>
+<pre><code>Warning in mh_distance(&quot;acb&quot;, 123): Vectors are not of the same type</code></pre>
 <pre><code>[1] -1</code></pre>
 </div>
 <div id="task-3" class="section level2">

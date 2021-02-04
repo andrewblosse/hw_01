@@ -90,6 +90,7 @@ Added test cases that return a non-negative modified Hamming distance result.
 mh_distance(1000000000000, 1000000000000) #function handles large values without issue
 mh_distance("does it","recogni") #function recognizes spaces as characters
 mh_distance(3L, 1L) #function is okay with integers
+mh_distance("AbCdEf", "aBcDeF") #Correctly identifies capitals/lowers
 ```
 
 **Initial test cases** (return values of `-1`)
@@ -107,6 +108,7 @@ Added test cases that return a value of `-1`.
 mh_distance(123, Inf) #function correctly identifies Inf/Inf
 mh_distance(pi, 20) #function recognizes transcendental numbers
 mh_distance(as.factor(1), 1) #function rejects factors and issues correct warning
+mh_distance("acb", 123)    #rejects different type inputs
 ```
 
 
