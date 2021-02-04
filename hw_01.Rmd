@@ -35,7 +35,11 @@ y<- 453
 mh(x,y)
 ```
 
-The above function calculates the modified Hamming distance in the event that x and y are acceptable inputs - it is not robust against incorrect inputs, which is why I call the above function within the below mh_distance function. Below, I've built in the necessary conditionals to return issue-specific errors if the user uses incorrect inputs. 
+The above function calculates the modified Hamming distance in the event that x
+and y are acceptable inputs - it is not robust against incorrect inputs, which 
+is why I call the above function within the below mh_distance function. Below, 
+I've built in the necessary conditionals to return issue-specific errors if the
+user uses incorrect inputs. 
 
 ```{r mh_distance_function}
 
@@ -76,7 +80,7 @@ mh_distance <- function(x, y) {
 
 **Initial test cases** (return a non-negative modified Hamming distance)
 
-```{r}
+```{r initialcases}
 mh_distance(x = "abc", y = "abc")
 mh_distance(x = T, y = FALSE)
 mh_distance(x = "523890", y = "752839")
@@ -85,9 +89,9 @@ mh_distance(x = 2341, y = 2350)
 
 Added test cases that return a non-negative modified Hamming distance result.
 
-```{r}
+```{r addcases}
 # additional test cases go here
-mh_distance(1000000000000, 1000000000000) #function handles large values without issue
+mh_distance(1000000000000, 1000000000000) #function handles large values
 mh_distance("does it","recogni") #function recognizes spaces as characters
 mh_distance(3L, 1L) #function is okay with integers
 mh_distance("AbCdEf", "aBcDeF") #Correctly identifies capitals/lowers
@@ -95,7 +99,7 @@ mh_distance("AbCdEf", "aBcDeF") #Correctly identifies capitals/lowers
 
 **Initial test cases** (return values of `-1`)
 
-```{r eval=FALSE}
+```{r initialbad}
 mh_distance(x = 52, y = 113)
 mh_distance(x = "swimming", y = "winning")
 mh_distance(x = NA, y = TRUE)
@@ -104,10 +108,10 @@ mh_distance(x = 1.5, y = 2.5)
 
 Added test cases that return a value of `-1`.
 
-```{r}
+```{r addedbadcase}
 mh_distance(123, Inf) #function correctly identifies Inf/Inf
 mh_distance(pi, 20) #function recognizes transcendental numbers
-mh_distance(as.factor(1), 1) #function rejects factors and issues correct warning
+mh_distance(as.factor(1), 1) #function rejects factors correctly
 mh_distance("acb", 123)    #rejects different type inputs
 ```
 
@@ -116,16 +120,37 @@ mh_distance("acb", 123)    #rejects different type inputs
 
 Consider the pair of vectors `s` and `w` given below.
 
-```{r}
+```{r vectordefin}
 s <- c(26, 50123, 456.12, 8, 0)
 w <- c(22, 50000, 451.00, 88, 0)
 ```
 
-```{r}
-# loop goes here
+```{r loop}
+for (i in (1:length(s))) {
+  k  <- mh_distance(s[i],w[i])
+  print(paste0("The distance between ", "x", " and ","y ","is ",k))} 
+#Rejects 3rd entry due to 451.00 becoming 451
 ```
 
 
 ## Task 4
 
-Brief write-up goes here...
+In attempting to solve task 1, I initially tried to create my function with one
+defining statement, but I realized that the tasks of sorting incorrect inputs
+and calculating MH distances would be easier if done separately. Thus, I 
+started creating the "sorting" bit of the function, mh_distance(), first by 
+stacking conditional statements to cover the wide range of possible invalid 
+inputs. Essentially, each type of incorrect input has its own conditional 
+statement which returns -1 and offers a specified warning. I had some trouble 
+dealing with nested conditionals which is why lines 74/75 are redundant - the 
+redundancy allows the code to work, but I'm sure that there is a more elegant 
+solution that keeps the program flowing to the final return statement - I was 
+unable to find it. Within the mh() function that performs the mh computation, 
+I chose to use conditionals to specify unique evaluations for each type of 
+input - the logical inputs are evaluated based on whether they match and the 
+character/numerical inputs are split into length 1 strings. In order to compare
+the characters in x and y, I unlisted them (to vectorize) and calculated the 
+number of unequal entries between the two. Overall, the main weakness in my 
+program is an over-reliance on conditional statements - I'm not comfortable yet
+with the vectorized conditional alternatives, something I hope to change moving
+forward in the course

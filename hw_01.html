@@ -449,7 +449,7 @@ mh(x,y)</code></pre>
 <pre><code>[1] 2</code></pre>
 <p>Added test cases that return a non-negative modified Hamming distance result.</p>
 <pre class="r"><code># additional test cases go here
-mh_distance(1000000000000, 1000000000000) #function handles large values without issue</code></pre>
+mh_distance(1000000000000, 1000000000000) #function handles large values</code></pre>
 <pre><code>[1] 0</code></pre>
 <pre class="r"><code>mh_distance(&quot;does it&quot;,&quot;recogni&quot;) #function recognizes spaces as characters</code></pre>
 <pre><code>[1] 7</code></pre>
@@ -458,10 +458,19 @@ mh_distance(1000000000000, 1000000000000) #function handles large values without
 <pre class="r"><code>mh_distance(&quot;AbCdEf&quot;, &quot;aBcDeF&quot;) #Correctly identifies capitals/lowers</code></pre>
 <pre><code>[1] 6</code></pre>
 <p><strong>Initial test cases</strong> (return values of <code>-1</code>)</p>
-<pre class="r"><code>mh_distance(x = 52, y = 113)
-mh_distance(x = &quot;swimming&quot;, y = &quot;winning&quot;)
-mh_distance(x = NA, y = TRUE)
-mh_distance(x = 1.5, y = 2.5)</code></pre>
+<pre class="r"><code>mh_distance(x = 52, y = 113)</code></pre>
+<pre><code>Warning in mh_distance(x = 52, y = 113): x and y are different lengths</code></pre>
+<pre><code>[1] -1</code></pre>
+<pre class="r"><code>mh_distance(x = &quot;swimming&quot;, y = &quot;winning&quot;)</code></pre>
+<pre><code>Warning in mh_distance(x = &quot;swimming&quot;, y = &quot;winning&quot;): x and y are different
+lengths</code></pre>
+<pre><code>[1] -1</code></pre>
+<pre class="r"><code>mh_distance(x = NA, y = TRUE)</code></pre>
+<pre><code>Warning in mh_distance(x = NA, y = TRUE): x or y is NA</code></pre>
+<pre><code>[1] -1</code></pre>
+<pre class="r"><code>mh_distance(x = 1.5, y = 2.5)</code></pre>
+<pre><code>Warning in mh_distance(x = 1.5, y = 2.5): Decimals in x or y</code></pre>
+<pre><code>[1] -1</code></pre>
 <p>Added test cases that return a value of <code>-1</code>.</p>
 <pre class="r"><code>mh_distance(123, Inf) #function correctly identifies Inf/Inf</code></pre>
 <pre><code>Warning in mh_distance(123, Inf): x or y is Inf/-Inf</code></pre>
@@ -469,7 +478,7 @@ mh_distance(x = 1.5, y = 2.5)</code></pre>
 <pre class="r"><code>mh_distance(pi, 20) #function recognizes transcendental numbers</code></pre>
 <pre><code>Warning in mh_distance(pi, 20): x and y are different lengths</code></pre>
 <pre><code>[1] -1</code></pre>
-<pre class="r"><code>mh_distance(as.factor(1), 1) #function rejects factors and issues correct warning</code></pre>
+<pre class="r"><code>mh_distance(as.factor(1), 1) #function rejects factors correctly</code></pre>
 <pre><code>Warning in mh_distance(as.factor(1), 1): Vectors are not of the same type</code></pre>
 <pre><code>[1] -1</code></pre>
 <pre class="r"><code>mh_distance(&quot;acb&quot;, 123)    #rejects different type inputs</code></pre>
@@ -481,11 +490,21 @@ mh_distance(x = 1.5, y = 2.5)</code></pre>
 <p>Consider the pair of vectors <code>s</code> and <code>w</code> given below.</p>
 <pre class="r"><code>s &lt;- c(26, 50123, 456.12, 8, 0)
 w &lt;- c(22, 50000, 451.00, 88, 0)</code></pre>
-<pre class="r"><code># loop goes here</code></pre>
+<pre class="r"><code>for (i in (1:length(s))) {
+  k  &lt;- mh_distance(s[i],w[i])
+  print(paste0(&quot;The distance between &quot;, &quot;x&quot;, &quot; and &quot;,&quot;y &quot;,&quot;is &quot;,k))} </code></pre>
+<pre><code>[1] &quot;The distance between x and y is 1&quot;
+[1] &quot;The distance between x and y is 3&quot;</code></pre>
+<pre><code>Warning in mh_distance(s[i], w[i]): x and y are different lengths</code></pre>
+<pre><code>[1] &quot;The distance between x and y is -1&quot;</code></pre>
+<pre><code>Warning in mh_distance(s[i], w[i]): x and y are different lengths</code></pre>
+<pre><code>[1] &quot;The distance between x and y is -1&quot;
+[1] &quot;The distance between x and y is 0&quot;</code></pre>
+<pre class="r"><code>#Rejects 3rd entry due to 451.00 becoming 451</code></pre>
 </div>
 <div id="task-4" class="section level2">
 <h2>Task 4</h2>
-<p>Brief write-up goes here…</p>
+<p>In attempting to solve task 1, I initially tried to create my function with one defining statement, but I realized that the tasks of sorting incorrect inputs and calculating MH distances would be easier if done separately. Thus, I started creating the “sorting” bit of the function, mh_distance(), first by stacking conditional statements to cover the wide range of possible invalid inputs. Essentially, each type of incorrect input has its own conditional statement which returns -1 and offers a specified warning. I had some trouble dealing with nested conditionals which is why lines 74/75 are redundant - the redundancy allows the code to work, but I’m sure that there is a more elegant solution that keeps the program flowing to the final return statement - I was unable to find it. Within the mh() function that performs the mh computation, I chose to use conditionals to specify unique evaluations for each type of input - the logical inputs are evaluated based on whether they match and the character/numerical inputs are split into length 1 strings. In order to compare the characters in x and y, I unlisted them (to vectorize) and calculated the number of unequal entries between the two. Overall, the main weakness in my program is an over-reliance on conditional statements - I’m not comfortable yet with the vectorized conditional alternatives, something I hope to change moving forward in the course</p>
 </div>
 
 
